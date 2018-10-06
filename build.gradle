@@ -1,0 +1,23 @@
+plugins {
+    id "java"
+}
+
+group "it.fagia"
+version "1.0-SNAPSHOT"
+
+sourceCompatibility = 1.8
+
+ext {
+    apacheCommonsLang3Version = "3.8.1"
+    junitVersion = "5.3.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: "org.apache.commons", name: "commons-lang3", version: apacheCommonsLang3Version
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
+    testRuntimeOnly group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
+}
