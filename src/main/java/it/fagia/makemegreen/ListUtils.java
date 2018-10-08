@@ -4,11 +4,11 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 
-class SortedStringListsChecker {
+class ListUtils {
 
     private List<String> stringList;
 
-    SortedStringListsChecker(List<String> stringList) {
+    ListUtils(List<String> stringList) {
         this.stringList = stringList;
     }
 
