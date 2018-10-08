@@ -1,14 +1,16 @@
 package it.fagia.makemegreen;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestFactory;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -22,41 +24,36 @@ class WordUtilsTests {
         @TestFactory
         @DisplayName("should identify simple strings as valid words")
         Stream<DynamicTest> valid() {
-            String w1 = "word";
-            String w2 = "another";
-            String w3 = "last ";
-            return buildTestStreamForValid(w1, w2, w3);
+            Pair<String, Boolean> w1 = new ImmutablePair<>("word", true);
+            Pair<String, Boolean> w2 = new ImmutablePair<>("another", true);
+            Pair<String, Boolean> w3 = new ImmutablePair<>("last ", true);
+            return buildTestStream(w1, w2, w3);
         }
 
         @TestFactory
         @DisplayName("should identify complex strings as invalid words")
         Stream<DynamicTest> notValid() {
-            String n1 = "not valid";
-            String n2 = "another not valid";
-            String n3 = " one more not valid ";
-            return buildTestStreamForNotValid(n1, n2, n3);
+            Pair<String, Boolean> n1 = new ImmutablePair<>("not valid", false);
+            Pair<String, Boolean> n2 = new ImmutablePair<>("another not valid", false);
+            Pair<String, Boolean> n3 = new ImmutablePair<>(" one more not valid ", false);
+            return buildTestStream(n1, n2, n3);
         }
 
         @TestFactory
         @DisplayName("should identify empty strings as invalid words")
         Stream<DynamicTest> empty() {
-            String e1 = "";
-            String e2 = "  ";
-            return buildTestStreamForNotValid(e1, e2, null);
+            Pair<String, Boolean> e1 = new ImmutablePair<>("", false);
+            Pair<String, Boolean> e2 = new ImmutablePair<>("  ", false);
+            Pair<String, Boolean> e3 = new ImmutablePair<>(null, false);
+            return buildTestStream(e1, e2, e3);
         }
 
-        private Stream<DynamicTest> buildTestStreamForValid(String... validStrings) {
-            return buildTestStream(true, validStrings);
-        }
-
-        private Stream<DynamicTest> buildTestStreamForNotValid(String... notValidStrings) {
-            return buildTestStream(false, notValidStrings);
-        }
-
-        private Stream<DynamicTest> buildTestStream(boolean isValid, String... strings) {
-            return Arrays.stream(strings)
-                    .map(TestData::new)
-                    .map(t -> dynamicTest(t.toString(), () -> assertEquals(isValid, t.isValid())));
+        @SafeVarargs
+        private final Stream<DynamicTest> buildTestStream(Pair<String, Boolean>... testPairs) {
+            return stream(testPairs)
+                    .map(testPair -> new ImmutablePair<>(new TestData(testPair.getLeft()), testPair.getRight()))
+                    .map(testPair -> dynamicTest(testPair.getLeft().toString(),
+                            () -> assertEquals(testPair.getRight(), testPair.getLeft().isValid())));
         }
 
     }
