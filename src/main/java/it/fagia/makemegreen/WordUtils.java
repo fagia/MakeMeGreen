@@ -14,6 +14,10 @@ class WordUtils {
         throw new NotImplementedException("Implement me!"); // TODO
     }
 
+    boolean isPalindrome() {
+        throw new NotImplementedException("Implement me!"); // TODO
+    }
+
     String getWord() {
         return word;
     }

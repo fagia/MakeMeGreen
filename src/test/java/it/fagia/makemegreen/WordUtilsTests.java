@@ -51,6 +51,37 @@ class WordUtilsTests {
 
     }
 
+    @Nested
+    @DisplayName("palindrome word checker")
+    class PalindromeWordCheckerTests extends TestBase<WordUtilsTests.TestData, String, Boolean> {
+
+        @TestFactory
+        @DisplayName("should check that these are palindrome words")
+        Stream<DynamicTest> palindrome() {
+            Pair<String, Boolean> p1 = new ImmutablePair<>("non", true);
+            Pair<String, Boolean> p2 = new ImmutablePair<>("enne", true);
+            Pair<String, Boolean> p3 = new ImmutablePair<>("tattarrattat", true);
+            return buildTestStream(p1, p2, p3);
+        }
+
+        @TestFactory
+        @DisplayName("should check that these aren't palindrome words")
+        Stream<DynamicTest> notPalindrome() {
+            Pair<String, Boolean> n1 = new ImmutablePair<>("", false);
+            Pair<String, Boolean> n2 = new ImmutablePair<>("   ", false);
+            Pair<String, Boolean> n3 = new ImmutablePair<>(null, false);
+            Pair<String, Boolean> n4 = new ImmutablePair<>("not", false);
+            Pair<String, Boolean> n5 = new ImmutablePair<>("non non", false);
+            return buildTestStream(n1, n2, n3, n4, n5);
+        }
+
+        @SafeVarargs
+        private final Stream<DynamicTest> buildTestStream(Pair<String, Boolean>... testPairs) {
+            return buildTestStream(TestData::new, TestData::isPalindrome, testPairs);
+        }
+
+    }
+
     class TestData extends WordUtils {
         TestData(String word) {
             super(word);
