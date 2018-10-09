@@ -11,17 +11,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @DisplayName("List utils")
 class ListUtilsTests {
 
     @Nested
     @DisplayName("string lists checker")
-    class StringListsCheckerTests {
+    class StringListsCheckerTests extends TestBase<ListUtilsTests.TestData, List<String>, Boolean> {
 
         @TestFactory
         @DisplayName("should check that these lists are sorted")
@@ -52,15 +49,12 @@ class ListUtilsTests {
 
         @SafeVarargs
         private final Stream<DynamicTest> buildTestStream(Pair<List<String>, Boolean>... testPairs) {
-            return stream(testPairs)
-                    .map(testPair -> new ImmutablePair<>(new TestData(testPair.getLeft()), testPair.getRight()))
-                    .map(testPair -> dynamicTest(testPair.getLeft().toString(),
-                            () -> assertEquals(testPair.getRight(), testPair.getLeft().isSorted())));
+            return buildTestStream(TestData::new, TestData::isSorted, testPairs);
         }
 
     }
 
-    private class TestData extends ListUtils {
+    class TestData extends ListUtils {
         TestData(List<String> stringList) {
             super(stringList);
         }
@@ -70,5 +64,4 @@ class ListUtilsTests {
             return getStringList() == null ? "<null>" : getStringList().toString();
         }
     }
-
 }

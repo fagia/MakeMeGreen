@@ -10,23 +10,19 @@ import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-
 @DisplayName("Word utils")
 class WordUtilsTests {
 
     @Nested
     @DisplayName("valid word checker")
-    class StringListsCheckerTests {
+    class ValidWordCheckerTests extends TestBase<WordUtilsTests.TestData, String, Boolean> {
 
         @TestFactory
         @DisplayName("should identify simple strings as valid words")
         Stream<DynamicTest> valid() {
             Pair<String, Boolean> w1 = new ImmutablePair<>("word", true);
             Pair<String, Boolean> w2 = new ImmutablePair<>("another", true);
-            Pair<String, Boolean> w3 = new ImmutablePair<>("last ", true);
+            Pair<String, Boolean> w3 = new ImmutablePair<>("bird ", true);
             return buildTestStream(w1, w2, w3);
         }
 
@@ -50,15 +46,12 @@ class WordUtilsTests {
 
         @SafeVarargs
         private final Stream<DynamicTest> buildTestStream(Pair<String, Boolean>... testPairs) {
-            return stream(testPairs)
-                    .map(testPair -> new ImmutablePair<>(new TestData(testPair.getLeft()), testPair.getRight()))
-                    .map(testPair -> dynamicTest(testPair.getLeft().toString(),
-                            () -> assertEquals(testPair.getRight(), testPair.getLeft().isValid())));
+            return buildTestStream(TestData::new, TestData::isValid, testPairs);
         }
 
     }
 
-    private class TestData extends WordUtils {
+    class TestData extends WordUtils {
         TestData(String word) {
             super(word);
         }
