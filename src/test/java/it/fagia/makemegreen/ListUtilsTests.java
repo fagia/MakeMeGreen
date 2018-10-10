@@ -17,6 +17,37 @@ import static java.util.Collections.singletonList;
 class ListUtilsTests {
 
     @Nested
+    @DisplayName("string occurrences counter")
+    class StringOccurrenceCounterTests extends TestBase<ListUtilsTests.TestData, List<String>, Integer> {
+
+        @TestFactory
+        @DisplayName("should count the occurrences of a matching string in a list")
+        Stream<DynamicTest> occurrenceOfString() {
+            String aMatchingString = "a string";
+            Pair<List<String>, Integer> o1 = new ImmutablePair<>(asList("a string", "another string", "one more string"), 1);
+            Pair<List<String>, Integer> o2 = new ImmutablePair<>(asList("lorem", "ipsum"), 0);
+            Pair<List<String>, Integer> o3 = new ImmutablePair<>(asList("lorem", "a string", "ipsum", "a string"), 2);
+            Pair<List<String>, Integer> o4 = new ImmutablePair<>(null, null);
+            return buildTestStream(aMatchingString, o1, o2, o3, o4);
+        }
+
+        @TestFactory
+        @DisplayName("should ignore in the count the occurrences of a partially matching string")
+        Stream<DynamicTest> occurrenceOfPartiallyMatchingString() {
+            String aPartiallyMatchingString = "string";
+            Pair<List<String>, Integer> o1 = new ImmutablePair<>(asList("a string", "another string", "one more string"), 0);
+            Pair<List<String>, Integer> o2 = new ImmutablePair<>(asList("lorem", "ipsum"), 0);
+            return buildTestStream(aPartiallyMatchingString, o1, o2);
+        }
+
+        @SafeVarargs
+        private final Stream<DynamicTest> buildTestStream(String aString, Pair<List<String>, Integer>... testPairs) {
+            return buildTestStream(TestData::new, testData -> testData.countOccurrencesOf(aString), testPairs);
+        }
+
+    }
+
+    @Nested
     @DisplayName("string lists checker")
     class StringListsCheckerTests extends TestBase<ListUtilsTests.TestData, List<String>, Boolean> {
 

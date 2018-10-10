@@ -16,6 +16,10 @@ class ListUtils {
         throw new NotImplementedException("Implement me!"); // TODO
     }
 
+    int countOccurrencesOf(String aString) {
+        throw new NotImplementedException("Implement me!"); // TODO
+    }
+
     List<String> getStringList() {
         return stringList;
     }
