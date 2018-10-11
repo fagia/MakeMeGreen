@@ -20,6 +20,10 @@ class ListUtils {
         throw new NotImplementedException("Implement me!"); // TODO
     }
 
+    List<String> findLongestStrings() {
+        throw new NotImplementedException("Implement me!"); // TODO
+    }
+
     List<String> getStringList() {
         return stringList;
     }

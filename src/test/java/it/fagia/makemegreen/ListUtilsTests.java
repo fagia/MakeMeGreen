@@ -11,10 +11,56 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 @DisplayName("List utils")
 class ListUtilsTests {
+
+    @Nested
+    @DisplayName("longest strings finder")
+    class LongestStringsFinderTests extends TestBase<ListUtilsTests.TestData, List<String>, List<String>> {
+
+        @TestFactory
+        @DisplayName("should return one longest string for the following lists")
+        Stream<DynamicTest> findOne() {
+            List<String> expected = singletonList("this is the longest string");
+            Pair<List<String>, List<String>> o1 = new ImmutablePair<>(singletonList("this is the longest string"), expected);
+            Pair<List<String>, List<String>> o2 = new ImmutablePair<>(asList("a string", "this is the longest string", "another string"), expected);
+            Pair<List<String>, List<String>> o3 = new ImmutablePair<>(asList("lorem", "this is the longest string", "this is the longest string", "ipsum"), expected);
+            Pair<List<String>, List<String>> o4 = new ImmutablePair<>(asList("", "this is the longest string", "another string"), expected);
+            Pair<List<String>, List<String>> o5 = new ImmutablePair<>(asList(null, "this is the longest string", "another string"), expected);
+            Pair<List<String>, List<String>> o6 = new ImmutablePair<>(asList("", "this is the longest string", null), expected);
+            return buildTestStream(o1, o2, o3, o4, o5, o6);
+        }
+
+        @TestFactory
+        @DisplayName("should return more than one longest string for the following lists")
+        Stream<DynamicTest> findMoreThanOne() {
+            List<String> expected = asList("this is the longest string one", "this is the longest string two");
+            Pair<List<String>, List<String>> m1 = new ImmutablePair<>(asList("this is the longest string one", "this is the longest string two"), expected);
+            Pair<List<String>, List<String>> m2 = new ImmutablePair<>(asList("lorem", "this is the longest string one", "this is the longest string two", "ipsum"), expected);
+            Pair<List<String>, List<String>> m3 = new ImmutablePair<>(asList("", "this is the longest string one", "this is the longest string two", "ipsum"), expected);
+            Pair<List<String>, List<String>> m4 = new ImmutablePair<>(asList(null, "this is the longest string one", "this is the longest string two", "ipsum"), expected);
+            return buildTestStream(m1, m2, m3, m4);
+        }
+
+        @TestFactory
+        @DisplayName("should return empty results for the following lists")
+        Stream<DynamicTest> findNone() {
+            List<String> expected = emptyList();
+            Pair<List<String>, List<String>> n1 = new ImmutablePair<>(singletonList(""), expected);
+            Pair<List<String>, List<String>> n2 = new ImmutablePair<>(singletonList(null), expected);
+            Pair<List<String>, List<String>> n3 = new ImmutablePair<>(asList("", null), expected);
+            return buildTestStream(n1, n2, n3);
+        }
+
+        @SafeVarargs
+        private final Stream<DynamicTest> buildTestStream(Pair<List<String>, List<String>>... testPairs) {
+            return buildTestStream(TestData::new, TestData::findLongestStrings, testPairs);
+        }
+
+    }
 
     @Nested
     @DisplayName("string occurrences counter")
