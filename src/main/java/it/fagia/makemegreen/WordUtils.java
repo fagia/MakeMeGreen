@@ -18,6 +18,10 @@ class WordUtils {
         throw new NotImplementedException("Implement me!"); // TODO
     }
 
+    String getReversed() {
+        throw new NotImplementedException("Implement me!"); // TODO
+    }
+
     String getWord() {
         return word;
     }

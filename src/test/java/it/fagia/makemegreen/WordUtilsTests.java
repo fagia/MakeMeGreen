@@ -3,12 +3,11 @@ package it.fagia.makemegreen;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Word utils")
 class WordUtilsTests {
@@ -58,8 +57,8 @@ class WordUtilsTests {
         @TestFactory
         @DisplayName("should check that these are palindrome words")
         Stream<DynamicTest> palindrome() {
-            Pair<String, Boolean> p1 = new ImmutablePair<>("non", true);
-            Pair<String, Boolean> p2 = new ImmutablePair<>("enne", true);
+            Pair<String, Boolean> p1 = new ImmutablePair<>("noon", true);
+            Pair<String, Boolean> p2 = new ImmutablePair<>("civic", true);
             Pair<String, Boolean> p3 = new ImmutablePair<>("tattarrattat", true);
             return buildTestStream(p1, p2, p3);
         }
@@ -71,13 +70,53 @@ class WordUtilsTests {
             Pair<String, Boolean> n2 = new ImmutablePair<>("   ", false);
             Pair<String, Boolean> n3 = new ImmutablePair<>(null, false);
             Pair<String, Boolean> n4 = new ImmutablePair<>("not", false);
-            Pair<String, Boolean> n5 = new ImmutablePair<>("non non", false);
+            Pair<String, Boolean> n5 = new ImmutablePair<>("not palindrome", false);
             return buildTestStream(n1, n2, n3, n4, n5);
         }
 
         @SafeVarargs
         private final Stream<DynamicTest> buildTestStream(Pair<String, Boolean>... testPairs) {
             return buildTestStream(TestData::new, TestData::isPalindrome, testPairs);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("word reverser")
+    class WordReverserTests extends TestBase<WordUtilsTests.TestData, String, String> {
+
+        @Nested
+        @DisplayName("for not valid words")
+        class NotValidWordsTests extends TestBase<WordUtilsTests.TestData, String, Class> {
+
+            @Test
+            @DisplayName("should throw exception if not valid word")
+            void notValid() {
+                WordUtils wordUtils = new WordUtils("not valid");
+                assertThrows(IllegalArgumentException.class, wordUtils::getReversed);
+            }
+
+        }
+
+        @Nested
+        @DisplayName("for valid words")
+        class ValidWordsTests extends TestBase<WordUtilsTests.TestData, String, String> {
+
+            @TestFactory
+            @DisplayName("should reverse the following words")
+            Stream<DynamicTest> notPalindrome() {
+                Pair<String, String> r1 = new ImmutablePair<>("hello", "olleh");
+                Pair<String, String> r2 = new ImmutablePair<>("world", "dlrow");
+                Pair<String, String> r3 = new ImmutablePair<>("a", "a");
+                Pair<String, String> r4 = new ImmutablePair<>("tattarrattat", "tattarrattat");
+                return buildTestStream(r1, r2, r3, r4);
+            }
+
+            @SafeVarargs
+            private final Stream<DynamicTest> buildTestStream(Pair<String, String>... testPairs) {
+                return buildTestStream(TestData::new, TestData::getReversed, testPairs);
+            }
+
         }
 
     }
