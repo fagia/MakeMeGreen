@@ -87,13 +87,32 @@ class WordUtilsTests {
 
         @Nested
         @DisplayName("for not valid words")
-        class NotValidWordsTests extends TestBase<WordUtilsTests.TestData, String, Class> {
+        class NotValidWordsTests {
+
+            private final Class<IllegalArgumentException> expected = IllegalArgumentException.class;
 
             @Test
             @DisplayName("should throw exception if not valid word")
-            void notValid() {
-                WordUtils wordUtils = new WordUtils("not valid");
-                assertThrows(IllegalArgumentException.class, wordUtils::getReversed);
+            void notValidWord() {
+                assertThrows(expected, new WordUtils("not valid")::getReversed);
+            }
+
+            @Test
+            @DisplayName("should throw exception if blank word")
+            void blankWord() {
+                assertThrows(expected, new WordUtils("   ")::getReversed);
+            }
+
+            @Test
+            @DisplayName("should throw exception if empty word")
+            void emptyWord() {
+                assertThrows(expected, new WordUtils("")::getReversed);
+            }
+
+            @Test
+            @DisplayName("should throw exception if null word")
+            void nullWord() {
+                assertThrows(expected, new WordUtils(null)::getReversed);
             }
 
         }
