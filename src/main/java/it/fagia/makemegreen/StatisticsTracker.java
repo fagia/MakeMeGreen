@@ -12,4 +12,12 @@ class StatisticsTracker {
         throw new NotImplementedException("Implement me!");
     }
 
+    float getMean() {
+        throw new NotImplementedException("Implement me!");
+    }
+
+    float getMedian() {
+        throw new NotImplementedException("Implement me!");
+    }
+
 }
